@@ -1,7 +1,7 @@
 // Global News Sources Configuration
 // 100+ International News Sources for Bangladeshi Diaspora
 
-export const newsSources = {
+const newsSources = {
   // Direct Bangla Sources (Non-Bangladesh)
   bangla: [
     {
@@ -360,7 +360,7 @@ export const newsSources = {
 };
 
 // Categories for website organization
-export const categories = {
+const categories = {
   'বিশ্ব-রাজনীতি': 'politics',
   'সাধারণ-সংবাদ': 'general', 
   'খেলাধুলা': 'sports',
@@ -371,7 +371,7 @@ export const categories = {
 };
 
 // Country mappings for diaspora news
-export const diasporaRegions = {
+const diasporaRegions = {
   'উত্তর-আমেরিকা': ['USA', 'Canada'],
   'ইউরোপ': ['UK', 'Germany', 'France', 'Italy', 'Spain'],
   'মধ্যপ্রাচ্য': ['UAE', 'Saudi Arabia', 'Qatar', 'Kuwait', 'Bahrain', 'Oman'],
@@ -379,3 +379,5 @@ export const diasporaRegions = {
   'ওশেনিয়া': ['Australia', 'New Zealand'],
   'আফ্রিকা': ['South Africa', 'Nigeria', 'Ghana']
 };
+
+module.exports = { newsSources, categories, diasporaRegions };

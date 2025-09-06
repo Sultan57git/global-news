@@ -27,7 +27,7 @@ export default function HomePage() {
         ...(searchTerm && { search: searchTerm })
       });
 
-      const response = await fetch(`/api/news?${params}`);
+      const response = await fetch(`/api/collect-full?${params}`);
       const data = await response.json();
 
       if (data.success) {

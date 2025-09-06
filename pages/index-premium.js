@@ -159,6 +159,7 @@ export default function PremiumHomePage() {
                           </span>
                         </div>
                         
+                        <a
                           href={article.link}
                           target="_blank"
                           rel="noopener noreferrer"

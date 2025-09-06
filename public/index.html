@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>বিশ্ব বাংলা নিউজ - আন্তর্জাতিক সংবাদের বিশ্বস্ত উৎস</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.13.3/cdn.min.js" defer></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans Bengali', 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #1a1a1a;
+        }
+
+        /* Premium Header */
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 800;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .brand-info h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #2d3748, #4a5568);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.25rem;
+        }
+
+        .brand-info p {
+            color: #64748b;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .search-container {
+            position: relative;
+        }
+
+        .search-input {
+            width: 320px;
+            padding: 12px 20px 12px 45px;
+            background: rgba(248, 250, 252, 0.8);
+            border: 2px solid transparent;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            background: white;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.1rem;
+            color: #64748b;
+        }
+
+        /* Navigation */
+        .nav {
+            background: white;
+            border-bottom: 1px solid #e2e8f0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+        }
+
+        .category-tabs {
+            display: flex;
+            gap: 0.5rem;
+            overflow-x: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .category-tabs::-webkit-scrollbar {
+            display: none;
+        }
+
+        .category-tab {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 12px 20px;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            white-space: nowrap;
+            border: 2px solid transparent;
+        }
+
+        .category-tab:hover {
+            background: #f1f5f9;
+            transform: translateY(-1px);
+        }
+
+        .category-tab.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .news-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            transition: all 0.4s ease;
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .news-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+        }
+
+        .news-card.featured {
+            grid-column: span 2;
+        }
+
+        .card-content {
+            padding: 2rem;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .source-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .source-badge {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .source-country {
+            color: #64748b;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .news-date {
+            color: #94a3b8;
+            font-size: 0.8rem;
+        }
+
+        .news-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #1e293b;
+            line-height: 1.4;
+            margin-bottom: 1rem;
+            transition: color 0.3s ease;
+        }
+
+        .featured .news-title {
+            font-size: 2rem;
+        }
+
+        .news-card:hover .news-title {
+            color: #667eea;
+        }
+
+        .news-description {
+            color: #475569;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .translated-badge {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .read-more {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #667eea;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .read-more:hover {
+            color: #4c51bf;
+            transform: translateX(4px);
+        }
+
+        /* Loading States */
+        .loading-card {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            animation: pulse 2s infinite;
+        }
+
+        .loading-line {
+            height: 1rem;
+            background: #e2e8f0;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+        }
+
+        .loading-line.short {
+            width: 70%;
+        }
+
+        .loading-line.medium {
+            width: 85%;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        /* Footer */
+        .footer {
+            background: linear-gradient(135deg, #1e293b, #334155);
+            color: white;
+            padding: 4rem 2rem 2rem;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .footer h3 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+        }
+
+        .footer-description {
+            color: #cbd5e1;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            max-width: 700px;
+            margin: 0 auto 3rem;
+        }
+
+        .source-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .source-region h4 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .source-list {
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+
+        .copyright {
+            color: #64748b;
+            font-size: 0.9rem;
+            padding-top: 2rem;
+            border-top: 1px solid #334155;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .search-input {
+                width: 100%;
+            }
+
+            .news-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .news-card.featured {
+                grid-column: span 1;
+            }
+
+            .brand-info h1 {
+                font-size: 1.5rem;
+            }
+
+            .main-content {
+                padding: 2rem 1rem;
+            }
+        }
+    </style>
+</head>
+<body x-data="newsApp()">
+    <!-- Header -->
+    <header class="header">
+        <div class="header-container">
+            <div class="logo-section">
+                <div class="logo">বি</div>
+                <div class="brand-info">
+                    <h1>বিশ্ব বাংলা নিউজ</h1>
+                    <p>বিশ্বস্ত আন্তর্জাতিক সংবাদ</p>
+                </div>
+            </div>
+            
+            <div class="header-actions">
+                <div class="search-container">
+                    <input 
+                        type="text" 
+                        class="search-input" 
+                        placeholder="খবর খুঁজুন..."
+                        x-model="searchQuery"
+                    >
+                    <div class="search-icon">🔍</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-container">
+            <div class="category-tabs">
+                <template x-for="category in categories" :key="category.id">
+                    <button 
+                        class="category-tab"
+                        :class="{ 'active': activeCategory === category.id }"
+                        @click="setActiveCategory(category.id)"
+                    >
+                        <span x-text="category.icon"></span>
+                        <span x-text="category.name"></span>
+                    </button>
+                </template>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Loading State -->
+        <div x-show="loading" class="news-grid">
+            <template x-for="i in 6" :key="i">
+                <div class="loading-card">
+                    <div class="loading-line"></div>
+                    <div class="loading-line medium"></div>
+                    <div class="loading-line short"></div>
+                </div>
+            </template>
+        </div>
+
+        <!-- News Grid -->
+        <div x-show="!loading" class="news-grid">
+            <template x-for="(article, index) in filteredNews" :key="article.id">
+                <article 
+                    class="news-card"
+                    :class="{ 'featured': index === 0 }"
+                >
+                    <div class="card-content">
+                        <div class="card-header">
+                            <div class="source-info">
+                                <span class="source-badge" x-text="article.source"></span>
+                                <span class="source-country" x-text="article.country"></span>
+                            </div>
+                            <div class="news-date">৬ সেপ্টেম্বর, ২০২৫</div>
+                        </div>
+                        
+                        <h2 class="news-title" x-text="article.title"></h2>
+                        <p class="news-description" x-text="article.description"></p>
+                        
+                        <div class="card-footer">
+                            <span class="translated-badge">অনুবাদিত</span>
+                            <a href="#" class="read-more">
+                                <span>বিস্তারিত</span>
+                                <span>→</span>
+                            </a>
+                        </div>
+                    </div>
+                </article>
+            </template>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <h3>বিশ্ব বাংলা নিউজ</h3>
+            <p class="footer-description">
+                বিশ্বের প্রতিটি কোণ থেকে সংবাদ, বাংলায় অনুবাদিত। 
+                আমেরিকা থেকে আর্জেন্টিনা, জাপান থেকে জার্মানি - সব খবর এক জায়গায়।
+            </p>
+            
+            <div class="source-grid">
+                <div class="source-region">
+                    <h4>উত্তর আমেরিকা</h4>
+                    <p class="source-list">CNN, Reuters, AP</p>
+                </div>
+                <div class="source-region">
+                    <h4>ইউরোপ</h4>
+                    <p class="source-list">BBC, Deutsche Welle</p>
+                </div>
+                <div class="source-region">
+                    <h4>এশিয়া</h4>
+                    <p class="source-list">NHK, Korea Herald</p>
+                </div>
+                <div class="source-region">
+                    <h4>লাতিন আমেরিকা</h4>
+                    <p class="source-list">Clarín, Folha</p>
+                </div>
+            </div>
+            
+            <p class="copyright">
+                © ২০২৫ বিশ্ব বাংলা নিউজ। বিশ্বস্ত আন্তর্জাতিক সংবাদের উৎস।
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        function newsApp() {
+            return {
+                loading: true,
+                searchQuery: '',
+                activeCategory: 'all',
+                categories: [
+                    { id: 'all', name: 'সর্বশেষ', icon: '🌍' },
+                    { id: 'usa', name: 'আমেরিকা', icon: '🇺🇸' },
+                    { id: 'europe', name: 'ইউরোপ', icon: '🇪🇺' },
+                    { id: 'arab', name: 'আরব বিশ্ব', icon: '🕌' },
+                    { id: 'asia', name: 'এশিয়া', icon: '🏮' },
+                    { id: 'latin', name: 'লাতিন আমেরিকা', icon: '🌎' }
+                ],
+                news: [
+                    {
+                        id: 1,
+                        title: 'মাজারে হামলার ঘটনায় আত্মঘ কাটিনি, \'মর সনু্যাস\' নিয়ে আবারো প্রশ্ন মুখ সরকার',
+                        description: 'কেউন মাজারে নয় ধর্ম অসমানেতা কিংবা রাজনৈতিক চাপ দিতে ঢাকা, রংপুরের দেশের বিভিন্ন স্থানে সুন্নত নাগরিক হামলা বা বিশুষজনার বেশ কয়েকটি ঘটনা ঘটেছে।',
+                        source: 'BBC',
+                        country: 'যুক্তরাজ্য',
+                        category: 'all'
+                    },
+                    {
+                        id: 2,
+                        title: 'যুক্তরাষ্ট্রে অবৈধ অভিবাসী পাকড়াও অভিযান, হুন্দাই গাড়ির কারখানা থেকে কয়েকশ কর্মী আটক',
+                        description: 'আলিংন যুক্তরাষ্ট্রের ভাতরভে উৎপাদন বৃদ্ধি এবং অবৈধ অভিবাসী নিয়ন্ত্রণ--- ইম্পেপে এই দুই নীতির মধ্যে বিরোধ ঊর্ধ কারণা হাতাও সর্বপুর্ণ বৃদ্ধি নাইন কোরিয়ার সঙ্গে যুক্তরাষ্ট্রের সম্পর্কের ওপরও এই',
+                        source: 'CNN',
+                        country: 'যুক্তরাষ্ট্র',
+                        category: 'usa'
+                    },
+                    {
+                        id: 3,
+                        title: 'ইউক্রেনে রাশিয়ার নতুন আক্রমণ, কিয়েভে বিমান হামলার সতর্কতা',
+                        description: 'রাশিয়া-ইউক্রেন যুদ্ধের নতুন মাত্রা যোগ হয়েছে। রাশিয়ান বাহিনী কিয়েভের উপর নতুন বিমান আক্রমণ চালিয়েছে।',
+                        source: 'Reuters',
+                        country: 'যুক্তরাষ্ট্র',
+                        category: 'europe'
+                    },
+                    {
+                        id: 4,
+                        title: 'চীনে নতুন করোনা ভাইরাসের প্রকোপ, বিশ্ব স্বাস্থ্য সংস্থার উদ্বেগ',
+                        description: 'চীনের বেইজিংয়ে নতুন একটি ভাইরাসের সংক্রমণ দেখা দিয়েছে যা বিশ্ব স্বাস্থ্য সংস্থার নজরে এসেছে।',
+                        source: 'Xinhua',
+                        country: 'চীন',
+                        category: 'asia'
+                    }
+                ],
+                
+                init() {
+                    setTimeout(() => {
+                        this.loading = false;
+                    }, 2000);
+                },
+                
+                setActiveCategory(categoryId) {
+                    this.activeCategory = categoryId;
+                },
+                
+                get filteredNews() {
+                    let filtered = this.news;
+                    
+                    if (this.activeCategory !== 'all') {
+                        filtered = filtered.filter(article => article.category === this.activeCategory);
+                    }
+                    
+                    if (this.searchQuery) {
+                        filtered = filtered.filter(article => 
+                            article.title.includes(this.searchQuery) || 
+                            article.description.includes(this.searchQuery)
+                        );
+                    }
+                    
+                    return filtered;
+                }
+            }
+        }
+    </script>
+</body>
+</html>

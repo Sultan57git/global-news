@@ -1,9 +1,9 @@
 // News API - Serves translated news to frontend
 // Provides filtered and organized news for website display
 
-const { newsDatabase } = require('./collect-news.js');
+import { newsDatabase } from './collect-news.js';
 
-module.exports = async function handler(req, res) {
+export default async function handler(req, res) {
   // Set CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
@@ -152,7 +152,7 @@ module.exports = async function handler(req, res) {
       timestamp: new Date().toISOString()
     });
   }
-};
+}
 
 // Helper functions
 function getCountriesForRegion(region) {

@@ -1,8 +1,8 @@
 // Automated News Collection & Translation API
 // This API runs the entire automation: RSS → Translation → Storage
 
-import { newsCollector } from '../../lib/newsCollector.js';
-import { translator } from '../../lib/translator.js';
+const { newsCollector } = require('../../lib/newsCollector.js');
+const { translator } = require('../../lib/translator.js');
 
 // In-memory storage (will be replaced with database later)
 let newsDatabase = {
@@ -11,7 +11,7 @@ let newsDatabase = {
   stats: {}
 };
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   // Set CORS headers for frontend access
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
@@ -101,7 +101,7 @@ export default async function handler(req, res) {
       timestamp: new Date().toISOString()
     });
   }
-}
+};
 
 // Filter articles from last 24 hours
 function filterRecentArticles(articles) {
@@ -138,4 +138,4 @@ function getRegionBreakdown(articles) {
 }
 
 // Export functions for other APIs to use
-export { newsDatabase };
+module.exports.newsDatabase = newsDatabase;

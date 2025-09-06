@@ -20,24 +20,21 @@ export default function HomePage() {
   const fetchNews = async () => {
     try {
       setLoading(true);
-      const params = new URLSearchParams({
-        limit: '50',
-        ...(selectedCategory !== 'all' && { category: selectedCategory }),
-        ...(selectedRegion !== 'all' && { region: selectedRegion }),
-        ...(searchTerm && { search: searchTerm })
-      });
-
-      const response = await fetch(`/api/collect-full?${params}`);
+      
+      // Use the working get-news API
+      const response = await fetch('/api/get-news');
       const data = await response.json();
 
       if (data.success) {
-        setNews(data.articles);
-        setLastUpdated(data.meta.lastUpdated);
+        setNews(data.articles || []);
+        setLastUpdated(data.lastUpdated);
       } else {
         console.error('Failed to fetch news:', data.error);
+        setNews([]);
       }
     } catch (error) {
       console.error('Error fetching news:', error);
+      setNews([]);
     } finally {
       setLoading(false);
     }
@@ -49,6 +46,7 @@ export default function HomePage() {
   };
 
   const formatDate = (dateString) => {
+    if (!dateString) return '';
     const date = new Date(dateString);
     return date.toLocaleDateString('bn-BD', {
       year: 'numeric',
@@ -58,6 +56,13 @@ export default function HomePage() {
       minute: '2-digit'
     });
   };
+
+  // Filter news based on search term
+  const filteredNews = news.filter(article => {
+    if (!searchTerm) return true;
+    return article.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+           article.description.toLowerCase().includes(searchTerm.toLowerCase());
+  });
 
   return (
     <>
@@ -159,7 +164,7 @@ export default function HomePage() {
           )}
 
           {/* No News State */}
-          {!loading && news.length === 0 && (
+          {!loading && filteredNews.length === 0 && (
             <div className="text-center py-12">
               <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6 max-w-md mx-auto">
                 <h3 className="text-lg font-semibold text-yellow-800 mb-2">কোনো খবর পাওয়া যায়নি</h3>
@@ -175,9 +180,9 @@ export default function HomePage() {
           )}
 
           {/* News Grid */}
-          {!loading && news.length > 0 && (
+          {!loading && filteredNews.length > 0 && (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {news.map((article) => (
+              {filteredNews.map((article) => (
                 <article
                   key={article.id}
                   className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
@@ -186,10 +191,10 @@ export default function HomePage() {
                     {/* Source Info */}
                     <div className="flex justify-between items-start mb-3">
                       <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">
-                        {article.source}
+                        {article.source || 'Unknown Source'}
                       </span>
                       <span className="text-xs text-gray-500">
-                        {article.sourceCountry}
+                        {article.sourceCountry || 'Unknown'}
                       </span>
                     </div>
 
@@ -211,7 +216,7 @@ export default function HomePage() {
                       
                       <div className="flex space-x-2">
                         {/* Translation Indicator */}
-                        {article.translation.translated && (
+                        {article.translation?.translated && (
                           <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">
                             অনুবাদিত
                           </span>
@@ -235,7 +240,7 @@ export default function HomePage() {
           )}
 
           {/* Load More Button */}
-          {!loading && news.length > 0 && news.length >= 50 && (
+          {!loading && filteredNews.length > 0 && (
             <div className="text-center mt-8">
               <button
                 onClick={() => fetchNews()}
